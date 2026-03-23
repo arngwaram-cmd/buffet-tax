@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วางแผนภาษีร้านบุฟเฟต์ — ปิดประตูโดนสรรพากรย้อนหลัง</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --navy:       #1B3F6E;   /* น้ำเงินเข้ม */
+    --blue:       #2E6DB4;   /* น้ำเงินกลาง */
+    --sky:        #5DADE2;   /* ฟ้า */
+    --sky-light:  #D6EAF8;   /* ฟ้าอ่อน */
+    --sky-pale:   #EBF5FB;   /* ฟ้าซีดมาก */
+    --beige:      #F2EAE0;   /* เบจ */
+    --beige-mid:  #E8DDD0;   /* เบจกลาง */
+    --beige-pale: #FAF7F4;   /* เบจซีด */
+    --white:      #FFFFFF;
+    --text:       #2C3950;
+    --gray:       #5A6A7E;
+    --warn:       #B03A2E;   /* แดงเตือน */
+    --warn-bg:    #FDECEA;
+    --gold:       #D4AC0D;   /* ทองดาว */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: #fff;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(145deg, #0d2545 0%, #1B3F6E 55%, #24568F 100%);
+    color: white;
+    padding: 60px 20px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 320px; height: 320px;
+    background: rgba(93,173,226,0.08);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 250px; height: 250px;
+    background: rgba(93,173,226,0.06);
+    border-radius: 50%;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--sky);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 18px;
+    border-radius: 20px;
+    margin-bottom: 22px;
+    letter-spacing: 0.5px;
+  }
+
+  .hero h1 {
+    font-size: clamp(26px, 5vw, 42px);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero h1 span { color: #A9D6F5; }
+
+  .hero-sub {
+    font-size: clamp(15px, 2.5vw, 18px);
+    color: rgba(255,255,255,0.8);
+    max-width: 600px;
+    margin: 0 auto 30px;
+  }
+
+  .hero-question {
+    background: rgba(93,173,226,0.15);
+    border: 1px solid rgba(93,173,226,0.35);
+    border-radius: 12px;
+    padding: 18px 24px;
+    max-width: 560px;
+    margin: 0 auto 36px;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .hero-question span { color: #A9D6F5; }
+
+  .cta-wrap { margin-bottom: 16px; }
+
+  .btn-main {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--sky), var(--blue));
+    color: white;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 18px 44px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(46,109,180,0.50);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(46,109,180,0.60);
+  }
+
+  .price-wrap {
+    margin-top: 14px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .price-old {
+    text-decoration: line-through;
+    color: rgba(255,255,255,0.4);
+    font-size: 15px;
+  }
+
+  .price-new {
+    color: #A9D6F5;
+    font-size: 26px;
+    font-weight: 800;
+    margin-left: 8px;
+  }
+
+  .hero-stat {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(93,173,226,0.25);
+  }
+
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: #A9D6F5; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+  /* ─── SECTIONS ─── */
+  .section { padding: 60px 20px; }
+  .section-inner { max-width: 860px; margin: 0 auto; }
+
+  .section-title {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 800;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .section-sub {
+    text-align: center;
+    color: var(--gray);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+
+  /* ─── PAIN CARDS ─── */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .pain-card {
+    background: var(--warn-bg);
+    border: 1.5px solid #F5C6C2;
+    border-left: 5px solid var(--warn);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .pain-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .pain-card h3 { font-size: 15px; font-weight: 700; color: var(--warn); margin-bottom: 6px; }
+  .pain-card p { font-size: 14px; color: #555; line-height: 1.6; }
+
+  /* ─── WHO ─── */
+  .who-section { background: var(--beige-pale); }
+
+  .who-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .who-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 20px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(27,63,110,0.08);
+    border-top: 4px solid var(--blue);
+  }
+
+  .who-card .who-icon { font-size: 36px; margin-bottom: 10px; }
+  .who-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .who-card p { font-size: 13.5px; color: var(--gray); line-height: 1.6; }
+
+  /* ─── CONTENT LIST ─── */
+  .content-list { list-style: none; }
+
+  .content-item {
+    display: flex;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--sky-light);
+  }
+
+  .content-item:last-child { border-bottom: none; }
+
+  .content-num {
+    flex-shrink: 0;
+    width: 52px; height: 40px;
+    background: var(--navy);
+    color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 2px;
+    white-space: nowrap;
+    padding: 0 10px;
+  }
+
+  .content-text h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .content-text p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+  .use-case-tag {
+    display: inline-block;
+    background: var(--sky-light);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-top: 6px;
+  }
+
+  /* ─── CASE STUDY ─── */
+  .case-section {
+    background: linear-gradient(145deg, #0d2545 0%, #1B3F6E 100%);
+    color: white;
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .case-card {
+    background: rgba(93,173,226,0.10);
+    border: 1px solid rgba(93,173,226,0.25);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .case-card .case-badge {
+    display: inline-block;
+    background: var(--warn);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .case-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+  .case-card p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.65; }
+  .case-card .case-lesson {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(93,173,226,0.25);
+    font-size: 13.5px;
+    color: #A9D6F5;
+    font-weight: 600;
+  }
+
+  /* ─── TOOLS ─── */
+  .tools-section { background: var(--beige-pale); }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .tool-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border-top: 4px solid var(--sky);
+    box-shadow: 0 2px 10px rgba(27,63,110,0.07);
+  }
+
+  .tool-card .tool-icon { font-size: 28px; margin-bottom: 8px; }
+  .tool-card h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .tool-card p { font-size: 13.5px; color: var(--gray); line-height: 1.6; }
+  .tool-value { margin-top: 12px; font-size: 13px; color: var(--blue); font-weight: 700; }
+  .tool-value span { text-decoration: line-through; color: #aaa; margin-right: 6px; }
+
+  /* ─── PRICING ─── */
+  .pricing-section { background: var(--beige); }
+
+  .pricing-box {
+    max-width: 560px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(27,63,110,0.14);
+    overflow: hidden;
+  }
+
+  .pricing-header {
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: white;
+    padding: 28px 32px;
+    text-align: center;
+  }
+
+  .pricing-header h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .pricing-header p { font-size: 14px; color: rgba(255,255,255,0.75); }
+
+  .pricing-body { padding: 28px 32px; }
+
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--sky-light);
+    font-size: 14.5px;
+  }
+
+  .pricing-row:last-child { border-bottom: none; }
+  .pricing-row .item-name { color: var(--text); }
+  .pricing-row .item-price { font-weight: 700; color: var(--blue); }
+  .pricing-row .item-free {
+    font-weight: 700;
+    color: var(--blue);
+    background: var(--sky-light);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+
+  .pricing-total {
+    background: var(--sky-pale);
+    border: 2px dashed var(--sky);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .pricing-total .total-price { text-decoration: line-through; color: #aaa; font-size: 16px; }
+
+  .pricing-cta {
+    background: var(--beige-pale);
+    border-radius: 14px;
+    padding: 22px;
+    text-align: center;
+  }
+
+  .pricing-cta .cta-price-old { font-size: 16px; color: #aaa; text-decoration: line-through; }
+  .pricing-cta .cta-price-new {
+    font-size: 46px;
+    font-weight: 800;
+    color: var(--navy);
+    display: block;
+    line-height: 1.1;
+    margin: 4px 0;
+  }
+
+  .pricing-cta .cta-note { font-size: 13px; color: #888; margin-bottom: 18px; }
+
+  .btn-buy {
+    display: block;
+    background: linear-gradient(135deg, var(--sky), var(--blue));
+    color: white;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 16px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(46,109,180,0.4);
+    transition: transform 0.15s;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+  }
+
+  .btn-buy:hover { transform: translateY(-2px); }
+
+  /* ─── REVIEWS ─── */
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .review-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(27,63,110,0.07);
+    border-left: 4px solid var(--sky);
+  }
+
+  .review-stars { color: var(--gold); font-size: 16px; margin-bottom: 8px; }
+  .review-text { font-size: 14px; color: #555; line-height: 1.65; margin-bottom: 12px; font-style: italic; }
+  .review-author { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .review-shop { font-size: 12px; color: #888; }
+
+  /* ─── FAQ ─── */
+  .faq-list { max-width: 700px; margin: 0 auto; }
+
+  .faq-item { border-bottom: 1px solid var(--sky-light); padding: 18px 0; }
+  .faq-item:last-child { border-bottom: none; }
+
+  .faq-q { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .faq-a { font-size: 14.5px; color: var(--gray); line-height: 1.7; }
+
+  /* ─── FINAL CTA ─── */
+  .final-cta {
+    background: linear-gradient(145deg, #0d2545 0%, #1B3F6E 100%);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+  }
+
+  .final-cta h2 {
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .final-cta h2 span { color: #A9D6F5; }
+  .final-cta p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 30px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .final-cta .btn-main { font-size: 22px; padding: 20px 50px; }
+
+  /* ─── STICKY BAR ─── */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(27,63,110,0.25);
+    gap: 12px;
+  }
+
+  .sticky-text { font-size: 14px; font-weight: 700; }
+  .sticky-price { font-size: 20px; font-weight: 800; }
+
+  .btn-sticky {
+    background: white;
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 800;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+  }
+
+  @media (max-width: 480px) {
+    .sticky-text { font-size: 12px; }
+    .sticky-price { font-size: 17px; }
+    .btn-sticky { padding: 8px 16px; font-size: 13px; }
+  }
+
+  .divider-line { border: none; border-top: 1px solid var(--sky-light); margin: 0; }
+  .check-list { list-style: none; margin-top: 12px; }
+  .check-list li { padding: 5px 0; padding-left: 26px; position: relative; font-size: 14.5px; color: #444; }
+  .check-list li::before { content: '✓'; position: absolute; left: 0; color: var(--blue); font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- ─── STICKY BAR ─── -->
+<div class="sticky-bar">
+  <div>
+    <div class="sticky-text">📚 วางแผนภาษีร้านบุฟเฟต์</div>
+    <div class="sticky-price">990 บาท <span style="font-size:13px;font-weight:400;opacity:0.7">ลดจาก 1,990 บาท</span></div>
+  </div>
+  <button class="btn-sticky" onclick="document.getElementById('buy').scrollIntoView({behavior:'smooth'})">ซื้อเลย →</button>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-badge">📚 eBook + เครื่องมือ 4 อย่าง</div>
+  <h1>ถ้าสรรพากรมาเคาะประตูร้านวันนี้<br><span>คุณพร้อมแค่ไหน?</span></h1>
+  <p class="hero-sub">คู่มือวางแผนภาษีฉบับเดียวที่เขียนสำหรับ<br>ร้านบุฟเฟต์/หมูกระทะ/ชาบู โดยเฉพาะ</p>
+
+  <div class="hero-question">
+    เจ้าของร้านชาบูโดนประเมินภาษีย้อนหลัง<br>
+    <span>2 ล้านบาท</span> เพราะทำสิ่งนี้อยู่ทุกวัน<br>
+    <span style="font-size:14px;font-weight:400;opacity:0.8">→ คุณกำลังทำสิ่งเดิมอยู่ไหม?</span>
+  </div>
+
+  <div class="cta-wrap">
+    <button class="btn-main" onclick="document.getElementById('buy').scrollIntoView({behavior:'smooth'})">
+      ซื้อ eBook ตอนนี้ →
+    </button>
+  </div>
+
+  <div class="price-wrap">
+    <span class="price-old">ราคาปกติ 1,990 บาท</span>
+    <span class="price-new">990 บาท</span>
+    <span style="font-size:13px;opacity:0.6"> — ดาวน์โหลดได้ทันที</span>
+  </div>
+
+  <div class="hero-stat">
+    <div class="stat-item">
+      <div class="stat-num">5 บท</div>
+      <div class="stat-label">เนื้อหาครบถ้วน</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Use case จริง</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">เครื่องมือแถมฟรี</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">990฿</div>
+      <div class="stat-label">เทียบปรึกษาทนาย 5,000+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PAIN ─── -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-title">ร้านบุฟเฟต์ของคุณกำลังเสี่ยงอยู่ไหม?</h2>
+    <p class="section-sub">สรรพากรรู้ยอด QR Code และบัตรเครดิตของคุณทุกบาทแล้ว<br>นี่คือ 5 ปัญหาที่ทำให้ร้านบุฟเฟต์โดนตรวจมากที่สุด</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">💳</div>
+        <h3>ยังไม่จด VAT ทั้งที่ยอดเกิน 1.8 ล้านแล้ว</h3>
+        <p>ยอดขายร้านบุฟเฟต์ข้ามเกณฑ์ได้ตั้งแต่เดือนที่ 2 ที่เปิดร้าน โทษคือโดนประเมินย้อนหลังพร้อมดอกเบี้ย 1.5% ต่อเดือน</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🥩</div>
+        <h3>ซื้อของสดตลาดไม่มีใบเสร็จ หักค่าใช้จ่ายไม่ได้</h3>
+        <p>ค่าหมู ผัก ซีฟู้ดที่ซื้อทุกวัน คือต้นทุนหลักของร้าน แต่ถ้าไม่มีเอกสาร สรรพากรไม่ยอมรับ กำไรบนกระดาษจะสูงเกินจริง</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🗑️</div>
+        <h3>ของเสียทิ้งถังเฉยๆ โดยไม่มีเอกสาร</h3>
+        <p>สรรพากรตีความว่า "ของที่หายไปคือของที่ขายออกไปแล้วแต่ซ่อนรายได้" ทำให้โดนประเมินเพิ่มได้</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🎁</div>
+        <h3>โปรโมชั่นมา 4 จ่าย 3 / Voucher คิด VAT ผิด</h3>
+        <p>แคชเชียร์หลายร้านคิด VAT บนราคาผิดฐาน ซึ่งถือว่าเรียกเก็บเกินจริง มีโทษทั้งผู้ขายและผู้ซื้อ</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🏦</div>
+        <h3>เงินขายเข้าบัญชีส่วนตัว ปนกับธุรกิจ</h3>
+        <p>ธนาคารรายงานให้สรรพากรโดยตรง ถ้าบัญชีส่วนตัวมีเงินเข้าออกผิดปกติ จะถูกตั้งข้อสงสัยทันที</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">👷</div>
+        <h3>จ่ายค่าแรงพนักงานเงินสด ไม่มีสัญญาจ้าง</h3>
+        <p>ค่าแรงที่จ่ายไปหักเป็นค่าใช้จ่ายไม่ได้ ถ้าไม่มีหลักฐาน ทำให้กำไรสูงเกินจริงและเสียภาษีมากเกิน</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-line">
+
+<!-- ─── WHO ─── -->
+<section class="section who-section">
+  <div class="section-inner">
+    <h2 class="section-title">eBook เล่มนี้เหมาะกับใคร?</h2>
+    <p class="section-sub">ออกแบบมาสำหรับเจ้าของร้านโดยเฉพาะ ไม่ใช่นักบัญชี</p>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-icon">🆕</div>
+        <h3>เพิ่งเปิดร้าน 0-2 ปี</h3>
+        <p>อยากตั้งระบบให้ถูกตั้งแต่ต้น ไม่ต้องมาแก้ทีหลังแบบเจ็บปวด</p>
+      </div>
+      <div class="who-card">
+        <div class="who-icon">😰</div>
+        <h3>เปิดมาแล้ว แต่กังวลอยู่</h3>
+        <p>รู้สึกว่าระบบยังไม่แข็งแรง กลัวสรรพากรจะมาเรียกตรวจแล้วรับมือไม่ได้</p>
+      </div>
+      <div class="who-card">
+        <div class="who-icon">📊</div>
+        <h3>มีสำนักงานบัญชีแล้ว</h3>
+        <p>แต่อยากเข้าใจว่าตัวเองต้องทำอะไร ไม่ใช่ปล่อยให้บัญชีจัดการทุกอย่างโดยไม่รู้เรื่อง</p>
+      </div>
+      <div class="who-card">
+        <div class="who-icon">💸</div>
+        <h3>อยากประหยัดภาษีถูกกฎหมาย</h3>
+        <p>ไม่ใช่หนีภาษี แต่อยากหักค่าใช้จ่ายได้ครบถ้วนทุกบาทที่มีสิทธิ์</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTENT ─── -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-title">เนื้อหาครบ 5 บท</h2>
+    <p class="section-sub">เขียนด้วยภาษาที่เจ้าของร้านอ่านแล้วเข้าใจได้ทันที<br>พร้อม use case จริงทุกหัวข้อ ไม่มีศัพท์บัญชีให้งง</p>
+    <ul class="content-list">
+      <li class="content-item">
+        <div class="content-num">บทนำ</div>
+        <div class="content-text">
+          <h3>เช็กด่วน! ร้านของคุณเสี่ยงแค่ไหน?</h3>
+          <p>ทำ Quiz ประเมินความเสี่ยง 15 ข้อ (Tax Audit Risk Score) เพื่อรู้จุดอ่อนของร้านคุณก่อนอ่านต่อ พร้อมปรับ Mindset ว่าทำไมภาษีถึงเป็น "ต้นทุน" ที่เจ้าของต้องดูแลเอง</p>
+          <span class="use-case-tag">🔍 Use case: คำนวณยอดขายจริง vs ยอดที่ควรแจ้ง</span>
+        </div>
+      </li>
+      <li class="content-item">
+        <div class="content-num">บท 1</div>
+        <div class="content-text">
+          <h3>ด่านแรกสุดหิน — รายได้และ VAT</h3>
+          <p>กับดัก 1.8 ล้านบาท, วิธีคิด VAT ทุกโปรโมชั่น (มา 4 จ่าย 3 / แถมของ / Voucher / ค่าปรับ), สรรพากรเห็นยอด QR ทุกบาทแล้ว ทำอย่างไร</p>
+          <span class="use-case-tag">🔍 4 use case: โปรโมชั่นแต่ละแบบคิด VAT อย่างไร</span>
+        </div>
+      </li>
+      <li class="content-item">
+        <div class="content-num">บท 2</div>
+        <div class="content-text">
+          <h3>ปัญหาโลกแตก — จัดการค่าใช้จ่ายให้สรรพากรยอมรับ</h3>
+          <p>ซื้อของสดจากตลาดไม่มีใบเสร็จ ทำอย่างไร? ค่าแรงพาร์ทไทม์/รายวัน/ต่างด้าว จัดการหัก ณ ที่จ่ายอย่างไร? ค่าตกแต่งร้านตัดค่าเสื่อมแบบไหน?</p>
+          <span class="use-case-tag">🔍 5 use case: พนักงานทุกประเภท + สคริปต์ขอถ่ายบัตรแม่ค้า</span>
+        </div>
+      </li>
+      <li class="content-item">
+        <div class="content-num">บท 3</div>
+        <div class="content-text">
+          <h3>จุดตายที่หลายร้านไม่รู้ — ของเสียและสต็อก</h3>
+          <p>ทำไมการทิ้งของโดยไม่มีเอกสารถึงอันตราย, อาหารพนักงานกินฟรีมีผลกับภาษีไหม, วิธีจัดการสต็อกแบบที่ร้านทำได้จริง</p>
+          <span class="use-case-tag">🔍 3 use case: เนื้อวากิวเสีย + ผักเหลือทุกวัน + ระบบสต็อกง่าย</span>
+        </div>
+      </li>
+      <li class="content-item">
+        <div class="content-num">บท 4</div>
+        <div class="content-text">
+          <h3>ถอดบทเรียน — พังเพราะภาษี มีอยู่จริง</h3>
+          <p>Case Study 2 เคส: ร้านชาบูยอดฮิตโดนประเมิน 2 ล้าน + เมื่อสรรพากรปลอมตัวมานั่งกินที่ร้านคุณ ควรทำอย่างไร?</p>
+          <span class="use-case-tag">🔍 2 case study: วิเคราะห์ขั้นตอน + วิธีรับมือที่ถูกต้อง</span>
+        </div>
+      </li>
+      <li class="content-item">
+        <div class="content-num">บท 5</div>
+        <div class="content-text">
+          <h3>Action Plan — ทำแค่นี้พอ!</h3>
+          <p>Checklist ประจำวัน/สัปดาห์/เดือน/ปี ที่ทีมร้านทำได้เองโดยไม่ต้องรู้เรื่องบัญชี + วิธีเลือกสำนักงานบัญชีที่เข้าใจธุรกิจร้านอาหารจริงๆ</p>
+          <span class="use-case-tag">🔍 Checklist 4 ชุด + คำถามที่ต้องถามสำนักงานบัญชี</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─── CASE STUDY ─── -->
+<section class="section case-section">
+  <div class="section-inner">
+    <h2 class="section-title" style="color:white">เหตุการณ์จริง ที่เกิดขึ้นแล้ว</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.65)">ถอดบทเรียนจากร้านที่เคยเจอปัญหาเหล่านี้มาแล้ว</p>
+    <div class="case-grid">
+      <div class="case-card">
+        <span class="case-badge">CASE 1</span>
+        <h3>ร้านชาบูยอดฮิต โดนประเมินภาษีย้อนหลัง 2 ล้านบาท</h3>
+        <p>เปิดมา 4 ปี ลูกค้าแน่นทุกวัน แต่รับเงินสดเข้าบัญชีส่วนตัวและไม่ยอมจด VAT จนสรรพากรส่งเจ้าหน้าที่มานั่งนับลูกค้าหลายวัน...</p>
+        <div class="case-lesson">💡 บทเรียน: ค่าใช้จ่ายในการต่อสู้คดีสูงกว่าค่าภาษีที่ควรจ่ายตั้งแต่ต้นถึง 3 เท่า</div>
+      </div>
+      <div class="case-card">
+        <span class="case-badge">CASE 2</span>
+        <h3>สรรพากรปลอมตัวมานั่งกิน และ "นับโต๊ะ-นับหัว"</h3>
+        <p>เจ้าหน้าที่ 3 คนแต่งตัวเหมือนลูกค้าทั่วไป มานั่งบันทึกจำนวนโต๊ะ นับหัวลูกค้า ประเมินยอดขาย แล้วเปรียบเทียบกับที่แจ้งสรรพากร...</p>
+        <div class="case-lesson">💡 บทเรียน: ถ้าเอกสารครบ การตรวจจบได้ใน 1 วัน ไม่มีปัญหา</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TOOLS ─── -->
+<section class="section tools-section">
+  <div class="section-inner">
+    <h2 class="section-title">🎁 เครื่องมือ 4 อย่าง แถมฟรี!</h2>
+    <p class="section-sub">มูลค่ารวม 6,800 บาท — ได้รับทันทีเมื่อซื้อ eBook</p>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-icon">📊</div>
+        <h3>Excel: Buffet Tax & Profit Simulator</h3>
+        <p>กรอกราคาต่อหัวและ Food Cost ระบบคำนวณกำไรสุทธิ ภาษีที่ต้องเตรียม และจุด Break-even ให้อัตโนมัติ</p>
+        <div class="tool-value"><span>2,900 บาท</span> ฟรี!</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🧮</div>
+        <h3>Excel: VAT Calculator โปรโมชั่น</h3>
+        <p>แคชเชียร์ใช้หน้างานได้เลย รองรับทุกโปรโมชั่น คำนวณ VAT ถูกต้องทุกบาท</p>
+        <div class="tool-value"><span>1,500 บาท</span> ฟรี!</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">📋</div>
+        <h3>No-Slip Expense Claim Pack</h3>
+        <p>ชุดแบบฟอร์ม 5 ใบ สำหรับซื้อของตลาดสดโดยไม่มีใบเสร็จ พร้อมสคริปต์ขอถ่ายบัตรแม่ค้า</p>
+        <div class="tool-value"><span>1,500 บาท</span> ฟรี!</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">♻️</div>
+        <h3>Food Waste Defect Log</h3>
+        <p>SOP + แบบฟอร์ม 4 ใบ สำหรับบันทึกของเสียอย่างถูกต้องตามที่สรรพากรยอมรับ</p>
+        <div class="tool-value"><span>900 บาท</span> ฟรี!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING ─── -->
+<section class="section pricing-section" id="buy">
+  <div class="section-inner">
+    <h2 class="section-title">รับทุกอย่างในราคา 990 บาท</h2>
+    <p class="section-sub">ดาวน์โหลดได้ทันทีหลังชำระเงิน</p>
+    <div class="pricing-box">
+      <div class="pricing-header">
+        <h2>📚 วางแผนภาษีร้านบุฟเฟต์</h2>
+        <p>eBook + เครื่องมือครบชุด</p>
+      </div>
+      <div class="pricing-body">
+        <div class="pricing-row">
+          <span class="item-name">📗 eBook เนื้อหาเต็ม 5 บท (PDF)</span>
+          <span class="item-price">1,990 บาท</span>
+        </div>
+        <div class="pricing-row">
+          <span class="item-name">📊 Excel: Buffet Tax & Profit Simulator</span>
+          <span class="item-free">ฟรี!</span>
+        </div>
+        <div class="pricing-row">
+          <span class="item-name">🧮 Excel: VAT Calculator โปรโมชั่น</span>
+          <span class="item-free">ฟรี!</span>
+        </div>
+        <div class="pricing-row">
+          <span class="item-name">📋 No-Slip Expense Claim Pack (5 แบบฟอร์ม)</span>
+          <span class="item-free">ฟรี!</span>
+        </div>
+        <div class="pricing-row">
+          <span class="item-name">♻️ Food Waste Defect Log (SOP + 4 แบบฟอร์ม)</span>
+          <span class="item-free">ฟรี!</span>
+        </div>
+        <div class="pricing-total">
+          <span>มูลค่ารวมทั้งหมด</span>
+          <span class="total-price">9,290 บาท</span>
+        </div>
+        <div class="pricing-cta">
+          <div class="cta-price-old">ราคาปกติ 1,990 บาท</div>
+          <span class="cta-price-new">฿990</span>
+          <div class="cta-note">โปรพิเศษ — ดาวน์โหลดได้ทันทีหลังโอน</div>
+          <button class="btn-buy" onclick="alert('ติดต่อ Line: @[your-line-id] หรือ กด DM Facebook เพื่อสั่งซื้อ')">
+            ซื้อเลย 990 บาท →
+          </button>
+          <div style="text-align:center;margin-top:14px;font-size:13px;color:#888">
+            💳 ชำระผ่าน PromptPay / โอนธนาคาร<br>
+            📩 รับไฟล์ทาง Email ภายใน 15 นาที
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── REVIEWS ─── -->
+<section class="section" style="background:var(--beige-pale)">
+  <div class="section-inner">
+    <h2 class="section-title">เสียงจากผู้อ่าน</h2>
+    <p class="section-sub">รีวิวจากเจ้าของร้านที่ได้ลองอ่านแล้ว</p>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"อ่านแล้วถึงบางอ้อเลย ที่เราทำอยู่ทุกวันนี้มันผิดหมดเลย โดยเฉพาะเรื่องของเสีย แต่ก่อนทิ้งเฉยๆ เลย ตอนนี้ทำ Food Waste Log ทุกวันแล้ว"</p>
+        <div class="review-author">คุณสมศรี ว.</div>
+        <div class="review-shop">เจ้าของร้านหมูกระทะ • นนทบุรี</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"ใช้ Excel VAT Calculator กับแคชเชียร์ได้เลยทันที ก่อนหน้านี้คิด VAT โปรผิดมาตลอด โชคดีที่เจอก่อนสรรพากรจะมาตรวจ"</p>
+        <div class="review-author">คุณวิชัย ป.</div>
+        <div class="review-shop">เจ้าของร้านชาบู 2 สาขา • กรุงเทพฯ</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"ราคา 990 บาท ถูกมากเมื่อเทียบกับความเสี่ยงที่ปิดได้ eBook เล่มเดียวช่วยจัดระเบียบให้ร้านใหม่ของเราได้ตั้งแต่วันแรกเลย"</p>
+        <div class="review-author">คุณพิมพ์ชนก ท.</div>
+        <div class="review-shop">เจ้าของร้านบุฟเฟต์เปิดใหม่ • เชียงใหม่</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-title">คำถามที่ถามบ่อย</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">ซื้อแล้วได้รับไฟล์เมื่อไหร่?</div>
+        <div class="faq-a">ได้รับภายใน 15 นาทีหลังโอนเงินและแจ้ง Slip ผ่าน Line หรือ Messenger ครับ ไฟล์จะส่งทาง Email ที่คุณแจ้งไว้</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">ต้องมีความรู้บัญชีก่อนไหม?</div>
+        <div class="faq-a">ไม่จำเป็นเลยครับ เขียนด้วยภาษาที่เจ้าของร้านอ่านแล้วเข้าใจได้ทันที ทุกหัวข้อมี use case จริงประกอบ ไม่มีศัพท์บัญชีที่ทำให้งงเกินจำเป็น</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">ถ้าฉันมีสำนักงานบัญชีแล้ว ยังต้องซื้อไหม?</div>
+        <div class="faq-a">มีประโยชน์มากครับ เพราะสำนักงานบัญชีทำงานบนข้อมูลที่คุณส่งให้ ถ้าคุณเข้าใจว่าต้องเตรียมอะไร ส่งอะไรให้เขา บัญชีก็ช่วยคุณได้เต็มที่ขึ้น</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">ใช้ได้กับร้านหมูกระทะ/ชาบู ด้วยไหม?</div>
+        <div class="faq-a">ได้เลยครับ! เนื้อหาครอบคลุมทุกรูปแบบของร้านบุฟเฟต์ ทั้งหมูกระทะ ชาบู บุฟเฟต์ซีฟู้ด บุฟเฟต์เนื้อนำเข้า รูปแบบธุรกิจและปัญหาภาษีเหมือนกันทั้งหมด</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">เนื้อหาอัปเดตตามกฎหมายล่าสุดไหม?</div>
+        <div class="faq-a">อัปเดตตามกฎหมายภาษีปัจจุบัน (2566-2567) ครับ หากมีการเปลี่ยนแปลงสำคัญจะแจ้งให้ผู้ซื้อทราบ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FINAL CTA ─── -->
+<section class="final-cta">
+  <h2>อย่าให้ปัญหาภาษี<br>กลายเป็น <span>ต้นทุนที่ไม่ได้วางแผน</span></h2>
+  <p>ลงทุน 990 บาทวันนี้ เพื่อปิดความเสี่ยงที่อาจมีมูลค่าหลักแสนถึงหลักล้านบาท</p>
+  <button class="btn-main" onclick="document.getElementById('buy').scrollIntoView({behavior:'smooth'})">
+    ซื้อ eBook ตอนนี้ 990 บาท →
+  </button>
+  <p style="margin-top:16px;font-size:14px;opacity:0.6">📩 ดาวน์โหลดได้ทันที · ใช้ได้พรุ่งนี้เลย</p>
+</section>
+
+<div style="height:70px"></div>
+
+</body>
+</html>
